@@ -44,6 +44,40 @@ app.post('/send-email', async (req, res) => {
     }
 });
 
+
+app.post('/book-call', async (req, res) => {
+    const { phone } = req.body;
+
+    if (!phone) {
+        return res.status(400).json({ success: false, message: 'Phone number is required' });
+    }
+
+    let transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: process.env.EMAIL,
+            pass: process.env.APP_PASS
+        }
+    });
+
+    let mailOptions = {
+        from: process.env.EMAIL,
+        to: process.env.EMAIL,
+        subject: 'New Consultation Call Request',
+        text: `A user has requested a consultation call. Phone Number: ${phone}`,
+        html: `<p><strong>Phone Number:</strong> ${phone}</p>`
+    };
+
+    try {
+        await transporter.sendMail(mailOptions);
+        res.status(200).json({ success: true, message: 'Consultation request sent!' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ success: false, message: 'Failed to send request.' });
+    }
+});
+
+
 app.listen(PORT, () => {
     console.log(`Server running`);
 });
