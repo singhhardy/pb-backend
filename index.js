@@ -13,7 +13,7 @@ app.use(bodyParser.json());
 
 // Email route
 app.post('/send-email', async (req, res) => {
-    const { name, email, message, subject } = req.body;
+    const { name, email, message, subject, phone } = req.body;
 
     // Gmail transporter setup
     let transporter = nodemailer.createTransport({
@@ -31,7 +31,8 @@ app.post('/send-email', async (req, res) => {
         text: message,
         html: `<p><strong>Name:</strong> ${name}</p>
                <p><strong>Email:</strong> ${email}</p>
-               <p><strong>Email:</strong> ${subject}</p>
+               <p><strong>Subject:</strong> ${subject}</p>
+               <p><strong>Phone:</strong> ${phone}</p>
                <p><strong>Message:</strong><br>${message}</p>`
     };
 
